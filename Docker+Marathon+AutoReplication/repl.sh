@@ -63,7 +63,7 @@ echo "### Checking Current Master and Slave Status [OK]"
 
 #Dump from master
 echo "### Dumping current Master's Databases. (${MHA_REPL_DB_1} ${MHA_REPL_DB_2} ${MHA_REPL_DB_3})"
-mysqldump --single-transaction --databases ${MHA_REPL_DB_1} ${MHA_REPL_DB_2} ${MHA_REPL_DB_3} -h ${MHA_CMASTER_IP} -P ${MHA_CMASTER_PORT} -u${MHA_DB_ADMIN_ID} -p${MHA_DB_ADMIN_PW} > /tmp/master_dump.db
+mysqldump --single-transaction --routines --trigger --databases ${MHA_REPL_DB_1} ${MHA_REPL_DB_2} ${MHA_REPL_DB_3} -h ${MHA_CMASTER_IP} -P ${MHA_CMASTER_PORT} -u${MHA_DB_ADMIN_ID} -p${MHA_DB_ADMIN_PW} > /tmp/master_dump.db
 if [ $? -ne 0 ]; then
 	echo "### [Warn] Dump from master fail...."
 	exit 1
@@ -96,4 +96,13 @@ do
 done
 echo "### Start slaves [OK]"
 
+echo "### Check MHA manager Stats"
+MHA_STATS=$(ps -ef | grep /usr/bin/masterha_manager | wc -l)
+if [ ${MHA_STATS} -ne 2 ];then
+	masterha_manager --conf=/etc/mha.cnf
+else
+	echo "MHA_Status_is...[OK]"
+fi
+
+echo "### Cleanup dump file"
 rm -f /tmp/master_dump.db

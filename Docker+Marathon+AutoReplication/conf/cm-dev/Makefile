@@ -1,5 +1,5 @@
-NAME := stadbmha-prod
-NAME2 := haproxy-stadb-prod
+NAME := cmdbmha-dev
+NAME2 := haproxy-stadb-dev
 TAG := v1
 TAG2 := v1
 IMAGE_NAME := geunsam2/$(NAME)

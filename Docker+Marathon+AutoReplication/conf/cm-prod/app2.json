@@ -1,5 +1,5 @@
 {
-  "id": "/prod/db/sta-proxy",
+  "id": "/prod/db/cm-proxy",
   "acceptedResourceRoles": [
     "slave_public"
   ],
@@ -16,29 +16,29 @@
     "portMappings": [
       {
         "containerPort": 33406,
-        "hostPort": 23506,
+        "hostPort": 23306,
         "labels": {
-          "VIP_0": "/prod/db/sta-proxy:23506"
+          "VIP_0": "/prod/db/cm-proxy:23306"
         },
         "protocol": "tcp",
-        "servicePort": 23506,
+        "servicePort": 23306,
         "name": "33406"
       },
       {
         "containerPort": 33408,
-        "hostPort": 23508,
+        "hostPort": 23308,
         "labels": {
-          "VIP_1": "/prod/db/sta-proxy:23508"
+          "VIP_1": "/prod/db/cm-proxy:23308"
         },
         "protocol": "tcp",
-        "servicePort": 23508,
+        "servicePort": 23308,
         "name": "33408"
       }
     ],
     "type": "DOCKER",
     "volumes": [],
     "docker": {
-      "image": "geunsam2/haproxy-stadb-prod:m1v1",
+      "image": "geunsam2/haproxy-cmdb-prod:m2v1",
       "forcePullImage": true,
       "privileged": false,
       "parameters": []

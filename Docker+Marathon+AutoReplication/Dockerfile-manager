@@ -13,7 +13,6 @@ COPY conf/app1.json /etc/mha_script/app1.json
 COPY conf/app2.json /etc/mha_script/app2.json
 COPY change_proxy1.sh /etc/mha_script/change_proxy1.sh
 COPY change_proxy2.sh /etc/mha_script/change_proxy2.sh
-COPY conf/MasterFailover.pm /usr/share/perl5/MHA/MasterFailover.pm
 
 RUN apt-get update && \
     apt-get install -y  bash git openssh-server rsync augeas-tools cron curl \
@@ -33,6 +32,7 @@ RUN apt-get update && \
     chmod 0644 /etc/cron.d/cron
 
 COPY conf/NodeUtil.pm /usr/share/perl5/MHA/NodeUtil.pm
+COPY conf/MasterFailover.pm /usr/share/perl5/MHA/MasterFailover.pm
     
 EXPOSE 22 3306
 
