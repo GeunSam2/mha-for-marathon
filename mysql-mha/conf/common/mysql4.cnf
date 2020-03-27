@@ -1,0 +1,4 @@
+[mysqld]
+server-id = 4
+log-bin=mysql-bin
+bind-address = *

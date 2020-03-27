@@ -1,2 +1,0 @@
-# MHA-docker
-MHA-docker
