@@ -1,0 +1,7 @@
+FROM haproxy:1.7
+ARG SERVICE_N
+ARG F_NUM
+COPY conf/${SERVICE_N}/haproxy${F_NUM}.cfg /usr/local/etc/haproxy/haproxy.cfg
+COPY entry_proxy.sh /docker-entrypoint.sh
+
+RUN chmod 775 /docker-entrypoint.sh

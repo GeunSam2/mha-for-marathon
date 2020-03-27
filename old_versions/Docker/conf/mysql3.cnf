@@ -1,0 +1,6 @@
+[mysqld]
+server-id = 3
+log-bin=mysql-bin
+bind-address = *
+log_slave_updates
+read_only=1

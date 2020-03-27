@@ -1,0 +1,49 @@
+FROM mysql:5.7.28
+
+COPY package/mha4mysql-manager_0.54-0_all.deb /tmp/mha4mysql-manager.deb
+COPY package/mha4mysql-node_0.54-0_all.deb /tmp/mha4mysql-node.deb
+COPY conf/common/cron /etc/cron.d/cron
+
+RUN apt-get update && \
+    apt-get install -y  bash git openssh-server rsync augeas-tools cron curl \
+    libdbd-mysql-perl libconfig-tiny-perl liblog-dispatch-perl libparallel-forkmanager-perl && \
+    deluser $(getent passwd 33 | cut -d: -f1) && \
+    delgroup $(getent group 33 | cut -d: -f1) 2>/dev/null || true && \
+    mkdir -p /root/.ssh && chmod 700 /root/.ssh/ &&\
+    augtool 'set /files/etc/ssh/sshd_config/PermitRootLogin "yes"' && \
+    augtool 'set /files/etc/ssh/sshd_config/AuthorizedKeysFile ".ssh/authorized_keys .ssh/authorized_keys2"' && \
+    augtool 'set /files/etc/ssh/sshd_config/PermitEmptyPasswords "yes"' && \
+    echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
+    echo "    UserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config && \
+    mkdir -p /var/log/masterha/ && \
+    dpkg -i /tmp/mha4mysql* && mkdir -p /usr/local/bin && \
+    curl https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.13/dcos -o dcos && \
+    mv dcos /usr/local/bin && chmod +x /usr/local/bin/dcos && \
+    chmod 0644 /etc/cron.d/cron
+RUN apt-get install -y jq 
+
+ARG SERVICE_N
+
+COPY conf/common/NodeUtil.pm /usr/share/perl5/MHA/NodeUtil.pm
+COPY conf/common/MasterFailover.pm /usr/share/perl5/MHA/MasterFailover.pm
+COPY conf/common/mha.cnf /etc/mha.cnf
+COPY master_ip_online_change_script /etc/mha_script/master_ip_online_change_script
+COPY master_ip_failover_script /etc/mha_script/master_ip_failover_script
+COPY conf/${SERVICE_N}/haproxy.json /etc/mha_script/haproxy.json
+COPY change_proxy1.sh /etc/mha_script/change_proxy1.sh
+COPY change_proxy2.sh /etc/mha_script/change_proxy2.sh
+COPY entry_mg.sh /entry_mg.sh
+COPY repl.sh /repl.sh
+COPY conf/${SERVICE_N}/key /root/.ssh
+
+RUN chmod 775 /*.sh && \
+    chmod 775 /etc/mha_script/*.sh && \
+    chmod 775 /etc/mha_script/*_script && \
+    chmod 644 /root/.ssh/authorized_keys && \
+    chmod 644 /root/.ssh/id_rsa.pub && \
+    chmod 600 /root/.ssh/id_rsa
+
+    
+EXPOSE 22 3306
+
+ENTRYPOINT ["/entry_mg.sh"]

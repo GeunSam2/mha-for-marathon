@@ -1,0 +1,71 @@
+{
+  "id": "/prod/db/cm-proxy",
+  "acceptedResourceRoles": [
+    "slave_public"
+  ],
+  "backoffFactor": 1.15,
+  "backoffSeconds": 1,
+  "constraints": [
+    [
+      "hostname",
+      "GROUP_BY",
+      "2"
+    ]
+  ],
+  "container": {
+    "portMappings": [
+      {
+        "containerPort": 33406,
+        "hostPort": 23306,
+        "labels": {
+          "VIP_0": "/prod/db/cm-proxy:23306"
+        },
+        "protocol": "tcp",
+        "servicePort": 23306,
+        "name": "33406"
+      },
+      {
+        "containerPort": 33408,
+        "hostPort": 23308,
+        "labels": {
+          "VIP_1": "/prod/db/cm-proxy:23308"
+        },
+        "protocol": "tcp",
+        "servicePort": 23308,
+        "name": "33408"
+      }
+    ],
+    "type": "DOCKER",
+    "volumes": [],
+    "docker": {
+      "image": "geunsam2/haproxy-cmdb-prod:m2v1",
+      "forcePullImage": true,
+      "privileged": false,
+      "parameters": []
+    }
+  },
+  "cpus": 0.1,
+  "disk": 0,
+  "instances": 2,
+  "maxLaunchDelaySeconds": 300,
+  "mem": 128,
+  "gpus": 0,
+  "networks": [
+    {
+      "name": "dcos-2",
+      "mode": "container"
+    }
+  ],
+  "requirePorts": false,
+  "upgradeStrategy": {
+    "maximumOverCapacity": 0,
+    "minimumHealthCapacity": 0
+  },
+  "killSelection": "YOUNGEST_FIRST",
+  "unreachableStrategy": {
+    "inactiveAfterSeconds": 0,
+    "expungeAfterSeconds": 0
+  },
+  "healthChecks": [],
+  "fetch": []
+}

@@ -1,0 +1,27 @@
+FROM mysql:5.7.28
+
+COPY entry_mg.sh /entry_mg.sh
+COPY key/manager /root/.ssh
+COPY package/mha4mysql-manager_0.54-0_all.deb /tmp/mha4mysql-manager.deb
+COPY package/mha4mysql-node_0.54-0_all.deb /tmp/mha4mysql-node.deb
+COPY conf/mha.cnf /etc/mha.cnf
+
+RUN apt-get update && \
+    apt-get install -y  bash git openssh-server rsync augeas-tools \
+    libdbd-mysql-perl libconfig-tiny-perl liblog-dispatch-perl libparallel-forkmanager-perl && \
+    deluser $(getent passwd 33 | cut -d: -f1) && \
+    delgroup $(getent group 33 | cut -d: -f1) 2>/dev/null || true && \
+    mkdir -p /root/.ssh && chmod 700 /root/.ssh/ &&\
+    augtool 'set /files/etc/ssh/sshd_config/PermitRootLogin "yes"' && \
+    augtool 'set /files/etc/ssh/sshd_config/AuthorizedKeysFile ".ssh/authorized_keys .ssh/authorized_keys2"' && \
+    augtool 'set /files/etc/ssh/sshd_config/PermitEmptyPasswords "yes"' && \
+    echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
+    echo "    UserKnownHostsFile /dev/null" >> /etc/ssh/ssh_config && \
+    mkdir -p /var/log/masterha/ && \
+    dpkg -i /tmp/mha4mysql*
+
+COPY conf/NodeUtil.pm /usr/share/perl5/MHA/NodeUtil.pm
+    
+EXPOSE 22 3306
+
+ENTRYPOINT ["/entry_mg.sh"]
