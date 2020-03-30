@@ -10,8 +10,23 @@ MHA_CMASTER_PORT=""
 MHA_CMASTER=""
 echo "### Checking ENV [OK]"
 
-echo "###Wait MHA Nodes for 10 Second "
-sleep 10
+echo "### Checking PS"
+PS_COUNTER=0
+for i in $(seq 1 3)
+do
+        CHECK_PS=$(ps -ef | egrep '(defunct|master_ip_failover_script)' | wc -l)
+        if [ ${CHECK_PS} -eq 1 ]; then
+                PS_COUNTER=$((PS_COUNTER+1))
+        fi
+        sleep 0.5
+done
+
+if [ ${PS_COUNTER} -ne 3 ]; then
+        echo "###Master is now failovering. Stop CRON script."
+        exit 1
+fi
+echo "### Checking PS [OK]"
+
 
 #Check Current Master and Slave status
 echo "### Checking Current Master and Slave Status"
@@ -60,6 +75,14 @@ fi
 echo "### Current Master is : ${MHA_CMASTER}"
 echo "### Need Work List : ${MHA_REPL_LIST[@]}"
 echo "### Checking Current Master and Slave Status [OK]"
+
+#Deploy HAPROXY
+if [ ${MHA_CMASTER_IP}${MHA_CMASTER_PORT} = ${MHA_DB_1_IP}${MHA_DB_1_PORT} ]; then
+        /bin/bash /etc/mha_script/change_proxy1.sh
+else
+        /bin/bash /etc/mha_script/change_proxy2.sh
+fi
+
 
 #Dump from master
 echo "### Dumping current Master's Databases. (${MHA_REPL_DB_1} ${MHA_REPL_DB_2} ${MHA_REPL_DB_3})"

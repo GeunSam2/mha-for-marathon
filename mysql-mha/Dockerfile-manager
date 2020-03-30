@@ -23,6 +23,11 @@ RUN apt-get update && \
 RUN apt-get install -y jq 
 
 ARG SERVICE_N
+ARG MHA_HAPROXY_IMG_1
+ARG MHA_HAPROXY_IMG_2
+
+ENV MHA_HAPROXY_IMG_1 ${MHA_HAPROXY_IMG_1}
+ENV MHA_HAPROXY_IMG_2 ${MHA_HAPROXY_IMG_2}
 
 COPY conf/common/NodeUtil.pm /usr/share/perl5/MHA/NodeUtil.pm
 COPY conf/common/MasterFailover.pm /usr/share/perl5/MHA/MasterFailover.pm
