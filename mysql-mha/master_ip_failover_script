@@ -74,10 +74,10 @@ sub main {
     eval {
       # args: hostname, port, user, password, raise_error_or_not
       ## Set read_only=0 on the new master
-      if ($new_master_ip eq "${MHA_DB_1_IP}") {
+      if ($new_master_ip.$new_master_port eq "${MHA_DB_1_IP}${MHA_DB_1_PORT}") {
         system("/bin/bash /etc/mha_script/change_proxy1.sh");
       }
-      elsif ($new_master_ip eq "${MHA_DB_2_IP}") {
+      elsif ($new_master_ip.$new_master_port eq "${MHA_DB_2_IP}${MHA_DB_2_PORT}") {
         system("/bin/bash /etc/mha_script/change_proxy2.sh");
       }
       else{

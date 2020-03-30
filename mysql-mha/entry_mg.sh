@@ -99,7 +99,7 @@ echo "### Need Work List : ${MHA_REPL_LIST[@]}"
 echo "### Checking Current Master and Slave Status [OK]"
 
 #Deploy HAPROXY
-if [ ${MHA_CMASTER_IP} = ${MHA_DB_1_IP} ]; then
+if [ ${MHA_CMASTER_IP}${MHA_CMASTER_PORT} = ${MHA_DB_1_IP}${MHA_DB_1_PORT} ]; then
 	/bin/bash /etc/mha_script/change_proxy1.sh
 else
 	/bin/bash /etc/mha_script/change_proxy2.sh
@@ -164,7 +164,9 @@ sed -i "s/\${MHA_DB_4_IP}/${MHA_DB_4_IP}/" /etc/mha.cnf
 sed -i "s/\${MHA_DB_4_PORT}/${MHA_DB_4_PORT}/" /etc/mha.cnf
 sed -i "s/\${MHA_DB_4_SSH_PORT}/${MHA_DB_4_SSH_PORT}/" /etc/mha.cnf
 sed -i "s/\${MHA_DB_1_IP}/${MHA_DB_1_IP}/" /etc/mha_script/master_ip_failover_script
+sed -i "s/\${MHA_DB_1_PORT}/${MHA_DB_1_PORT}/" /etc/mha_script/master_ip_failover_script
 sed -i "s/\${MHA_DB_2_IP}/${MHA_DB_2_IP}/" /etc/mha_script/master_ip_failover_script
+sed -i "s/\${MHA_DB_2_PORT}/${MHA_DB_2_PORT}/" /etc/mha_script/master_ip_failover_script
 sed -i "s,\${MHA_HAPROXY_DCOS_NAME},${MHA_HAPROXY_DCOS_NAME}," /etc/mha_script/change_proxy1.sh
 sed -i "s/\${MHA_DB_1_IP}/${MHA_DB_1_IP}/" /etc/mha_script/master_ip_online_change_script
 sed -i "s/\${MHA_DB_2_IP}/${MHA_DB_2_IP}/" /etc/mha_script/master_ip_online_change_script
