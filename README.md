@@ -1,3 +1,5 @@
+
+
 # MHA for marathon
 
 본 솔루션은 marathon + mesos 환경 위에서 mysql 데이터베이스 failover 솔루션 중 하나인 MHA를 보다 효율적이고 지속적이게 이용할 수 있는 방법에 대해 고민하다가 만들게 된 솔루션 입니다. 허접한 실력으로 주먹구구식으로 만든 것이라 많이 부족하지만, 아직 초기 단계라고 생각하며, 고수 분들의 도움을 받아서 앞으로 더욱 발전 시키고 싶은 생각에 현재 구현 된 내용에 대해서 공유하려고 합니다.
@@ -12,13 +14,13 @@ mha는 master, slave 관계에 있는 mysql DB에 대해서 master에 문제가 
 
 ## MHA for marathon Architecture
 
-![images/1.png)
+![1](image/1.png)
 
-그림(1)
+_그림1_
 
-![images/2.png)
+![2](image/2.png)
 
-그림2
+_그림2_
 
 MHA for marathon은 기본적으로 모든 구성요소들을 컨테이너화 하여 동작시키고, 총 6개의 컨테이너로 구성되어 있습니다.
 
