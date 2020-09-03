@@ -1,2 +1,0 @@
-FROM haproxy:1.7
-COPY conf/haproxy2.cfg /usr/local/etc/haproxy/haproxy.cfg

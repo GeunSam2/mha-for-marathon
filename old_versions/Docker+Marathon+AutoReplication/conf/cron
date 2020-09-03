@@ -1,1 +1,0 @@
-0-59/3 * * * * /bin/bash /repl.sh >> /var/log/masterha/MHA.log 2>&1
