@@ -1,5 +1,5 @@
 {
-  "id": "%your_service_id%,",
+  "id": "%your_service_id%",
   "backoffFactor": 1.15,
   "backoffSeconds": 1,
   "constraints": [
@@ -8,18 +8,16 @@
   "container": {
     "portMappings": [
       {
-        "containerPort": 33406,
-        "hostPort": %replace_here%,
+        "containerPort": %port_for_master_group%,
+        "hostPort": %port_for_master_group%,
         "protocol": "tcp",
-        "servicePort": %replace_here%,
-        "name": "%replace_here%"
+        "name": "master_group"
       },
       {
-        "containerPort": 33408,
-        "hostPort": %replace_here%,
+        "containerPort": %port_for_slave_group%,
+        "hostPort": %port_for_slave_group%,
         "protocol": "tcp",
-        "servicePort": %replace_here%,
-        "name": "%replace_here%"
+        "name": "slave_group"
       }
     ],
     "type": "DOCKER",
@@ -31,11 +29,11 @@
       "parameters": []
     }
   },
-  "cpus": 0.5,
+  "cpus": %cpu_limit%,
   "disk": 0,
   "instances": 1,
   "maxLaunchDelaySeconds": 300,
-  "mem": 512, 
+  "mem": %mem_limit%, 
   "gpus": 0,
   "networks": [
     {

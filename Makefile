@@ -1,7 +1,6 @@
 SERVICE_N := sampledb
 TAG := v1
 IMAGE_NAME_BASE := geunsam2/mha-$(SERVICE_N)
-MYSQL_PASS := admin123!@#
 
 .PHONY: help build push clean
 
